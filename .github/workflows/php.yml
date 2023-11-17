@@ -16,19 +16,25 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Validate composer.json and composer.lock
-      run: composer validate --strict
+      run: |
+        cd api
+        composer validate --strict
 
     - name: Cache Composer packages
       id: composer-cache
       uses: actions/cache@v3
       with:
-        path: vendor
+        path: api/vendor
         key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
         restore-keys: |
           ${{ runner.os }}-php-
 
     - name: Install dependencies
-      run: composer install --prefer-dist --no-progress
+      run: |
+        cd api
+        composer install --prefer-dist --no-progress
 
     - name: PHP Lint
-      run: find . -name "*.php" -print0 | xargs -0 -n1 php -l
+      run: |
+        cd api
+        composer run lint ./src ./tests
