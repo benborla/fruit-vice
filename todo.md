@@ -2,6 +2,12 @@ Tasks:
 
 API:
 [ ] - Setup database
+        Actions:
+            - Created database via: php bin/console doctrine:database:create
+            - Created `fruit` table via: php bin/console make:entity
+            - Ran: php bin/console make:migration
+            - Ran: php bin/console d:m:m 
+            - Setup createdAt and updatedAt using Doctrine lifecycle callbacks
 [ ] - Setup commands
     - fruits:fetch
     - fruits:purge
@@ -12,15 +18,15 @@ Database
 
 fruits:
     - id (primary)
-    - carbohydrates (float) default: 0f
-    - genus (string)
-    - protein (float) default: 0f
     - name (string)
-    - fat (float) default: 0f
-    - calories (float) default 0f
+    - genus (string)
     - family (string)
-    - sugar (float) default: 0f
     - order (string)
+    - carbohydrates (float) default: 0f
+    - fat (float) default: 0f
+    - protein (float) default: 0f
+    - sugar (float) default: 0f
+    - calories (float) default 0f
     - source (string) options: FRUITY_VICE_API | FRUITY_VICE_APP
 
 users:
