@@ -8,6 +8,10 @@ API:
             - Ran: php bin/console make:migration
             - Ran: php bin/console d:m:m 
             - Setup createdAt and updatedAt using Doctrine lifecycle callbacks
+[ ] - Setup Phpunit
+        - Setup fixtures
+        - Setup Test Database for Fixtures
+
 [ ] - Setup commands
     - fruits:fetch
     - fruits:purge

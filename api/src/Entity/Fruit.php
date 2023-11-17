@@ -9,6 +9,16 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'fruits')]
 class Fruit
 {
+    /**
+     * @INFO: This should be the value if the data came from https://fruityvice.com/#
+     */
+    public const SOURCE_FETCHED_API = 'FRUITY_VICE_API';
+
+    /**
+     * @INFO: This should be the value if the data came the app itself
+     */
+    public const SOURCE_FROM_APP = 'FRUITY_VICE_APP';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -210,5 +220,5 @@ class Fruit
     public function setTimestampsOnUpdate(): void
     {
         $this->updatedAt = new \DateTime('now');
-    }   
+    }
 }
