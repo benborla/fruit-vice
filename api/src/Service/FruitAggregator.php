@@ -49,15 +49,15 @@ class FruitAggregator
                 $isNew = true;
             }
 
-            $fruit->setName($item['name'])
-                ->setFamily($item['family'])
-                ->setFruitOrder($item['order'])
-                ->setGenus($item['genus'])
-                ->setCalories($item['nutritions']['calories'])
-                ->setFat($item['nutritions']['fat'])
-                ->setSugar($item['nutritions']['sugar'])
-                ->setCarbohydrates($item['nutritions']['carbohydrates'])
-                ->setProtein($item['nutritions']['protein'])
+            $fruit->setName($item['name'] ?? '')
+                ->setFamily($item['family'] ?? '')
+                ->setFruitOrder($item['order'] ?? '')
+                ->setGenus($item['genus'] ?? '')
+                ->setCalories($item['nutritions']['calories'] ?? 0.0)
+                ->setFat($item['nutritions']['fat'] ?? 0.0)
+                ->setSugar($item['nutritions']['sugar'] ?? 0.0)
+                ->setCarbohydrates($item['nutritions']['carbohydrates'] ?? 0.0)
+                ->setProtein($item['nutritions']['protein'] ?? 0.0)
                 ->setSource(Fruit::SOURCE_FETCHED_API);
 
             // @INFO: Persist non-existent data
