@@ -18,8 +18,8 @@ API:
 [x] - Setup commands
     - fruits:fetch
     - fruits:purge
-[ ] - Setup service
-[ ] - Setup endpoints
+[x] - Setup service
+[x] - Setup endpoints
 
 Database
 

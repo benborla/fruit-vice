@@ -4,6 +4,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+  app.api_endpoint: '%env(API_ENDPOINT)%'
 
 services:
     # default configuration for services in *this* file
@@ -22,3 +23,17 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    # @INFO: Register FruitsApi
+    App\Service\FruitsApiClient:
+      arguments:
+        $apiEndpoint: '%app.api_endpoint%'
+
+    # @INFO: Register FruitsApiEntity
+    App\Entity\Api\FruitApiEntity:
+
+    # @INFO: Register FruitAggregator
+    App\Service\FruitAggregator:
+
+    # @INFO: Register FruitDecomulator
+    App\Service\FruitDecomulator:
