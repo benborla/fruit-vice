@@ -11,4 +11,3 @@ class FruitsFetchCommandTest extends KernelTestCase
         $this->assertIsString('fruits:fetch');
     }
 }
-

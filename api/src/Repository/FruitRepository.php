@@ -21,43 +21,44 @@ class FruitRepository extends ServiceEntityRepository
         parent::__construct($registry, Fruit::class);
     }
 
-   /**
-    * @return Fruit[] Returns an array of Fruit objects
-    */
-   // public function findByExampleField($value): array
-   // {
-   //     return $this->createQueryBuilder('f')
-   //         ->andWhere('f.exampleField = :val')
-   //         ->setParameter('val', $value)
-   //         ->orderBy('f.id', 'ASC')
-   //         ->setMaxResults(10)
-   //         ->getQuery()
-   //         ->getResult()
-   //     ;
-   // }
+    /**
+     * @return Fruit[] Returns an array of Fruit objects
+     */
+    // public function findByExampleField($value): array
+    // {
+    //     return $this->createQueryBuilder('f')
+    //         ->andWhere('f.exampleField = :val')
+    //         ->setParameter('val', $value)
+    //         ->orderBy('f.id', 'ASC')
+    //         ->setMaxResults(10)
+    //         ->getQuery()
+    //         ->getResult()
+    //     ;
+    // }
 
-   /**
-    * @param string $field The name of the field that you would like to refer to
-    * @param string $value The value of the field that you would like to refer to
-    * @return Fruit[] Returns an array of Fruit objects
-    */
-  public function findByField(string $field, string $value): null|array
-  {
-       return $this->createQueryBuilder('f')
-           ->andWhere("f.{$field} = :val")
-           ->setParameter('val', $value)
-           ->orderBy('f.id', 'ASC')
-           ->getQuery()
-           ->getOneOrNullResult();
-  }
+    /**
+     * @param string $field The name of the field that you would like to refer to
+     * @param string $value The value of the field that you would like to refer to
+     *
+     * @return Fruit[] Returns an array of Fruit objects
+     */
+    public function findByField(string $field, string $value): null|array
+    {
+        return $this->createQueryBuilder('f')
+            ->andWhere("f.{$field} = :val")
+            ->setParameter('val', $value)
+            ->orderBy('f.id', 'ASC')
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 
-   // public function findOneByField(string $field, string $value): ?Fruit
-   // {
-   //     return $this->createQueryBuilder('f')
-   //         ->andWhere('f.exampleField = :val')
-   //         ->setParameter('val', $value)
-   //         ->getQuery()
-   //         ->getOneOrNullResult()
-   //     ;
-   // }
+    // public function findOneByField(string $field, string $value): ?Fruit
+    // {
+    //     return $this->createQueryBuilder('f')
+    //         ->andWhere('f.exampleField = :val')
+    //         ->setParameter('val', $value)
+    //         ->getQuery()
+    //         ->getOneOrNullResult()
+    //     ;
+    // }
 }

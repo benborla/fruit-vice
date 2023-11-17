@@ -2,16 +2,16 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Fruit;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use App\Entity\Fruit;
 
 class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
         // create 20 products! Bam!
-        for ($i = 1; $i <= 20; $i++) {
+        for ($i = 1; $i <= 20; ++$i) {
             $fruit = new Fruit();
             $fruit->setName("Fruit $i")
                 ->setGenus($this->getRandomGenus())
@@ -31,9 +31,7 @@ class AppFixtures extends Fixture
     }
 
     /**
-     * Returns a random Genus data
-     *
-     * @return string
+     * Returns a random Genus data.
      */
     private function getRandomGenus(): string
     {
@@ -50,16 +48,14 @@ class AppFixtures extends Fixture
             'Litchi',
             'Ananas',
             'Ficus',
-            'Passiflora'
+            'Passiflora',
         ];
 
         return $this->randomizer($genus);
     }
 
     /**
-     * Returns a random Family data
-     *
-     * @return string
+     * Returns a random Family data.
      */
     private function getRandomFamily(): string
     {
@@ -80,9 +76,7 @@ class AppFixtures extends Fixture
     }
 
     /**
-     * Returns a random Fruit order data
-     *
-     * @return string
+     * Returns a random Fruit order data.
      */
     private function getFruitOrder(): string
     {
@@ -100,10 +94,9 @@ class AppFixtures extends Fixture
     }
 
     /**
-     * Reusable function to get a random value from an array
+     * Reusable function to get a random value from an array.
      *
-     * @param array $reference The array it refers to 
-     * @return string
+     * @param array $reference The array it refers to
      */
     private function randomizer(array $reference): string
     {

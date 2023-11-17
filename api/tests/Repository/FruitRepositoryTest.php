@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Repository;
 
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use App\Entity\Fruit;
 use App\Repository\FruitRepository;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class FruitRepositoryTest extends KernelTestCase
 {
@@ -22,9 +22,7 @@ class FruitRepositoryTest extends KernelTestCase
     }
 
     /**
-     * Return the Fruit repository class
-     *
-     * @return \App\Repository\FruitRepository
+     * Return the Fruit repository class.
      */
     private function getFruitRepository(): FruitRepository
     {
@@ -40,7 +38,7 @@ class FruitRepositoryTest extends KernelTestCase
     public function testVerifyFruitInstance(): void
     {
         $fruit = $this->getFruitRepository()->findOneBy(['id' => 1]);
-        $this->assertInstanceOf($fruit::class, new Fruit);
+        $this->assertInstanceOf($fruit::class, new Fruit());
     }
 
     protected function tearDown(): void

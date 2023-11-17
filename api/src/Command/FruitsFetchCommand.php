@@ -2,14 +2,14 @@
 
 namespace App\Command;
 
+use App\Entity\Fruit;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use App\Entity\Fruit;
-use Doctrine\ORM\EntityManagerInterface;
 
 #[AsCommand(
     name: 'fruits:fetch',
@@ -36,7 +36,7 @@ class FruitsFetchCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $truncate =  $input->getOption('truncate') === 'false' ? false : true;
+        $truncate = 'false' === $input->getOption('truncate') ? false : true;
 
         if ($truncate) {
             $io->info('Clearing Fruit table');
@@ -44,11 +44,10 @@ class FruitsFetchCommand extends Command
             $connection = $this->em->getConnection();
             $platform = $connection->getDatabasePlatform();
             $table = $this->em->getClassMetadata(Fruit::class)->getTableName();
-            $connection->executeStatement($platform->getTruncateTableSQL($table, true ));
+            $connection->executeStatement($platform->getTruncateTableSQL($table, true));
         }
 
         $io->comment('Processing...');
-
 
         $io->success('Done!');
 
