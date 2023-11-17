@@ -1,16 +1,19 @@
 Tasks:
 
 API:
-[ ] - Setup database
+[x] - Setup database
         Actions:
             - Created database via: php bin/console doctrine:database:create
             - Created `fruit` table via: php bin/console make:entity
             - Ran: php bin/console make:migration
             - Ran: php bin/console d:m:m 
             - Setup createdAt and updatedAt using Doctrine lifecycle callbacks
-[ ] - Setup Phpunit
+[x] - Setup Phpunit
         - Setup fixtures
         - Setup Test Database for Fixtures
+        - Modified bootstrap for phpunit to run specific tasks
+[x] - Setup PHPStan
+
 
 [ ] - Setup commands
     - fruits:fetch
