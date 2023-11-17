@@ -5,56 +5,36 @@
 namespace App\Tests\Command;
 
 use App\Command\FruitsFetchCommand;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping\ClassMetadata;
+use App\Service\FruitAggregator;
+use App\Service\FruitDecomulator;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class FruitsFetchCommandTest extends KernelTestCase
 {
-    private const TABLE_NAME = 'fruits';
-    private $entityManager;
+    private $aggregator;
+    private $decomulator;
     private $application;
+    private $command;
 
-    /**
-     * @TODO: For improvement
-     *
-     * @return void
-     */
-    protected function setUp(): void
+    public function setUp(): void
     {
-        $kernel = self::bootKernel();
-        $this->application = new Application($kernel);
+    // Mock the services
+        $this->aggregator = $this->createMock(FruitAggregator::class);
+        $this->decomulator = $this->createMock(FruitDecomulator::class);
+        $this->command = new FruitsFetchCommand($this->aggregator, $this->decomulator);
 
-        $this->entityManager = $this->createMock(EntityManagerInterface::class);
-
-        $classMetadata = $this->createMock(ClassMetadata::class);
-        $classMetadata->expects($this->any())
-            ->method('getTableName')
-            ->willReturn(self::TABLE_NAME);
-
-        $this->entityManager->expects($this->any())
-            ->method('getClassMetadata')
-            ->willReturn($classMetadata);
-
-        $connection = $this->createMock(\Doctrine\DBAL\Connection::class);
-        $connection->expects($this->any())
-            ->method('getDatabasePlatform')
-            ->willReturn($this->createMock(\Doctrine\DBAL\Platforms\AbstractPlatform::class));
-
-        $this->entityManager->expects($this->any())
-            ->method('getConnection')
-            ->willReturn($connection);
-
-        $this->application->add(new FruitsFetchCommand($this->entityManager));
+        $this->application = new Application(self::bootKernel());
+        $this->application->add($this->command);
+        $this->command = $this->application->find('fruits:fetch');
     }
+
     public function testFruitsFetchCommandDefault()
     {
-        $command = $this->application->find('fruits:fetch');
-        $commandTester = new CommandTester($command);
+        $commandTester = new CommandTester($this->command);
 
-        // @INFO: Run the command with the `--truncate` option
+        // @INFO: Run the command with default option
         $commandTester->execute([]);
 
         // @INFO: Run assertions
@@ -85,7 +65,7 @@ class FruitsFetchCommandTest extends KernelTestCase
         parent::tearDown();
 
         // @INFO: doing this is recommended to avoid memory leaks
-        $this->entityManager->close();
-        $this->entityManager = null;
+        $this->aggregator = null;
+        $this->decomulator = null;
     }
 }

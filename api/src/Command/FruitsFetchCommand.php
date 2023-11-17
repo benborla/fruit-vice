@@ -2,14 +2,14 @@
 
 namespace App\Command;
 
-use App\Entity\Fruit;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use App\Service\FruitAggregator;
+use App\Service\FruitDecomulator;
 
 #[AsCommand(
     name: 'fruits:fetch',
@@ -17,8 +17,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class FruitsFetchCommand extends Command
 {
-    public function __construct(private EntityManagerInterface $em)
-    {
+    public function __construct(
+        private FruitAggregator $aggregator,
+        private FruitDecomulator $decomulator,
+    ) {
         parent::__construct();
     }
 
@@ -40,14 +42,21 @@ class FruitsFetchCommand extends Command
 
         if ($truncate) {
             $io->info('Clearing Fruit table');
-            // @TODO: Improve this, or move this to a service
-            $connection = $this->em->getConnection();
-            $platform = $connection->getDatabasePlatform();
-            $table = $this->em->getClassMetadata(Fruit::class)->getTableName();
-            $connection->executeStatement($platform->getTruncateTableSQL($table, true));
+            $this->decomulator->__invoke();
         }
 
         $io->comment('Processing...');
+        // @INFO: Fake step loading
+        $io->createProgressBar(100);
+        $io->progressStart();
+        $io->progressAdvance(50);
+
+        // @INFO: Process the synchronization of API data to DB
+        $this->aggregator->sync();
+
+        // @INFO: Fake progress iterate
+        $io->progressAdvance(50);
+        $io->progressFinish();
 
         $io->success('Done!');
 

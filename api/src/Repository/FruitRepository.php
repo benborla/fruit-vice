@@ -40,9 +40,9 @@ class FruitRepository extends ServiceEntityRepository
      * @param string $field The name of the field that you would like to refer to
      * @param string $value The value of the field that you would like to refer to
      *
-     * @return Fruit[] Returns an array of Fruit objects
+     * @return \App\Entity\Fruit Returns an instance of Fruit
      */
-    public function findByField(string $field, string $value): null|array
+    public function findByField(string $field, string $value): null|Fruit
     {
         return $this->createQueryBuilder('f')
             ->andWhere("f.{$field} = :val")

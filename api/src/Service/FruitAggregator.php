@@ -12,24 +12,63 @@ class FruitAggregator
 {
     public function __construct(
         private FruitsApiClient $api,
-        private EntityManagerInterface $em
+        private EntityManagerInterface $em,
+        private FruitRepository $fruitRepository,
     ) {
     }
 
-    public function save()
+    /**
+     * This will fetch data from the API endpoint and will do an upsert in the
+     * database `fruits` table
+     *
+     * @return self
+     */
+    public function sync(): self
     {
         $fruitsFromApi = $this->api->get();
 
         // @INFO: Throw an exception if the data is invalid
-        if (! $fruitsFromApi instanceof FruitApiEntity) {
+        if (!$fruitsFromApi instanceof FruitApiEntity) {
             throw new \Exception('Invalid response from the API endpoint');
         }
 
         // @INFO: Do nothing if nothing is returned from the API call
         if (0 === $fruitsFromApi->getItems()) {
-            return;
+            return $this;
         }
 
         // @INFO: Check if the fetched data from API already exist in the database table
+        $items = $fruitsFromApi->getItems();
+        foreach ($items as $item) {
+            $isNew = false;
+            // @INFO: Check if data already exist
+            $fruit = $this->fruitRepository->findByField('name', $item['name']);
+
+            // @INFO: Create new instance for new data if `fruit` is not existing
+            if (!$fruit) {
+                $fruit = new Fruit();
+                $isNew = true;
+            }
+
+            $fruit->setName($item['name'])
+                ->setFamily($item['family'])
+                ->setFruitOrder($item['order'])
+                ->setGenus($item['genus'])
+                ->setCalories($item['nutritions']['calories'])
+                ->setFat($item['nutritions']['fat'])
+                ->setSugar($item['nutritions']['sugar'])
+                ->setCarbohydrates($item['nutritions']['carbohydrates'])
+                ->setProtein($item['nutritions']['protein'])
+                ->setSource(Fruit::SOURCE_FETCHED_API);
+
+            // @INFO: Persist non-existent data
+            if ($isNew) {
+                $this->em->persist($fruit);
+            }
+
+            $this->em->flush();
+        }
+
+        return $this;
     }
 }
