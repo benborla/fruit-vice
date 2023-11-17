@@ -13,9 +13,9 @@ API:
         - Setup Test Database for Fixtures
         - Modified bootstrap for phpunit to run specific tasks
 [x] - Setup PHPStan
+[x] - Setup Github Runner for PHP linting
 
-
-[ ] - Setup commands
+[x] - Setup commands
     - fruits:fetch
     - fruits:purge
 [ ] - Setup service
