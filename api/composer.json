@@ -1,4 +1,6 @@
 {
+    "name": "benborla/fruit-vice",
+    "description": "Application made for Fruity Vice",
     "type": "project",
     "license": "proprietary",
     "minimum-stability": "stable",
