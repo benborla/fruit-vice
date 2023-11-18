@@ -19,6 +19,11 @@ final class IndexController extends AbstractController
     {
     }
 
+    /**
+     * Retrieve all fruits based on request parameter
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
     #[Route('/', name: 'fruits', methods: ['GET'])]
     public function all(Request $request, FruitRepository $fruits): JsonResponse
     {
@@ -34,27 +39,22 @@ final class IndexController extends AbstractController
         // @INFO: Remove irrelevant property when responding
         unset($result['queryBuilder']);
 
-        return new JsonResponse($result);
+        return $this->json($result);
     }
 
+    /**
+     * Creates an instance of Fruit
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
     #[Route('/fruit', name: 'fruit_add', methods: ['POST', 'PUT'])]
-    public function fruitNew(Request $request, ValidatorInterface $validator)
+    public function fruitNew(Request $request, ValidatorInterface $validator): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
-
-        $fruit = new Fruit();
-        $fruit->setName($data['name'] ?? '')
-            ->setGenus($data['genus'] ?? '')
-            ->setFamily($data['family'] ?? '')
-            ->setFruitOrder($data['fruit_order'] ?? '')
-            ->setCarbohydrates($data['carbohydrates'] ?? 0)
-            ->setFat($data['fat'] ?? 0)
-            ->setProtein($data['protein'] ?? 0)
-            ->setSugar($data['sugar'] ?? 0)
-            ->setCalories($data['calories'] ?? 0)
+        $fruit = (new Fruit())
             ->setCreatedAt(new \DateTime('now'))
-            ->setUpdatedAt(new \DateTime('now'))
-            ->setSource(Fruit::SOURCE_FROM_APP);
+            ->setUpdatedAt(new \DateTime('now'));
+
+        $fruit = $this->serializedForm($request, $fruit);
 
         $violations = $validator->validate($fruit);
 
@@ -70,12 +70,81 @@ final class IndexController extends AbstractController
         $this->em->persist($fruit);
         $this->em->flush();
 
-        return new JsonResponse($fruit->toArray());
+        return $this->json($fruit->toArray());
     }
 
-    #[Route('/fruit/{id}', name: 'fruit', methods: ['GET', 'POST', 'PUT'])]
-    public function fruit(Request $request)
+    /**
+     * Get or patch a single Fruit instance based on Fruit ID provided
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    #[Route('/fruit/{id}', name: 'fruit', methods: ['GET', 'POST', 'PATCH', 'DELETE'])]
+    public function fruit(Request $request, FruitRepository $fruits)
     {
-        // dd($request);
+        $id = (int) $request->attributes->get('id');
+        $fruit = $fruits->find($id);
+
+        // @INFO: Throw a 404 if a resource is not found
+        if (!$fruit instanceof Fruit) {
+            return $this->json([], Response::HTTP_NOT_FOUND);
+        }
+
+        // @INFO: Return a resource
+        if ($request->getMethod() === Request::METHOD_GET) {
+            // @INFO: Throw a 404 if a resource is not found
+            if (!$fruit instanceof Fruit) {
+                return $this->json([], Response::HTTP_NOT_FOUND);
+            }
+
+            return $this->json($fruit->toArray());
+        }
+
+        // @INFO: Update and return a resource
+        if (
+            in_array(
+                $request->getMethod(),
+                [Request::METHOD_POST, Request::METHOD_PATCH]
+            )
+        ) {
+            $fruit = $this->serializedForm($request, $fruit);
+            $this->em->flush();
+
+            return $this->json($fruit->toArray());
+        }
+
+        // @INFO: Delete a resource
+        if ($request->getMethod() === Request::METHOD_DELETE) {
+            $this->em->remove($fruit);
+            $this->em->flush();
+
+            return $this->json($fruit->toArray());
+        }
+
+        // @INFO: Default 404 return
+        return $this->json([], Response::HTTP_NOT_FOUND);
+    }
+
+    /**
+     * Hydrate the Fruit instance with request data
+     *
+     * @var \Symfony\Component\HttpFoundation\Request $request
+     * @var \App\Entity $fruit
+     *
+     * @return \App\Entity\Fruit
+     */
+    private function serializedForm(Request $request, Fruit $fruit): Fruit
+    {
+        $data = json_decode($request->getContent(), true);
+
+        return $fruit->setName($data['name'] ?? $fruit->getName() ?: '')
+            ->setGenus($data['genus'] ?? $fruit->getGenus() ?: '')
+            ->setFamily($data['family'] ?? $fruit->getFamily() ?: '')
+            ->setFruitOrder($data['fruit_order'] ?? $fruit->getFruitOrder() ?: '')
+            ->setCarbohydrates($data['carbohydrates'] ?? $fruit->getCarbohydrates() ?: 0)
+            ->setFat($data['fat'] ?? $fruit->getFat() ?: 0)
+            ->setProtein($data['protein'] ?? $fruit->getProtein() ?: 0)
+            ->setSugar($data['sugar'] ?? $fruit->getSugar() ?: 0)
+            ->setCalories($data['calories'] ?? $fruit->getCalories() ?: 0)
+            ->setSource(Fruit::SOURCE_FROM_APP);
     }
 }
