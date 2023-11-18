@@ -150,7 +150,7 @@ final class IndexController extends AbstractController
         $fruit = $fruits->find($id);
 
         // @INFO: Throw a 404 if a resource is not found
-        // @INFO: Ensure that request method is DELETE
+        // @INFO: Ensure that request method is POST
         if (
             !$fruit instanceof Fruit ||
             $request->getMethod() !== Request::METHOD_POST
