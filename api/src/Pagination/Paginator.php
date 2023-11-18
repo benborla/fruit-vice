@@ -20,7 +20,7 @@ final class Paginator
 
     public function __construct(
         private readonly DoctrineQueryBuilder $queryBuilder,
-        private readonly int $pageSize = self::PAGE_SIZE
+        private int $pageSize = self::PAGE_SIZE
     ) {
     }
 
@@ -31,7 +31,7 @@ final class Paginator
 
         $query = $this->queryBuilder
             ->setFirstResult($firstResult)
-            ->setMaxResults($this->pageSize)
+            ->setMaxResults($this->getPageSize())
             ->getQuery();
 
         // @INFO: Set Hydration to Array, to fit on JSON response
@@ -66,6 +66,13 @@ final class Paginator
     public function getLastPage(): int
     {
         return (int) ceil($this->numResults / $this->pageSize);
+    }
+
+    public function setPageSize(int $pageSize = 10): self
+    {
+        $this->pageSize = $pageSize;
+
+        return $this;
     }
 
     public function getPageSize(): int
@@ -109,5 +116,10 @@ final class Paginator
     public function getResults(): \Traversable
     {
         return $this->results;
+    }
+
+    public function toArray(): array
+    {
+        return get_object_vars($this);
     }
 }

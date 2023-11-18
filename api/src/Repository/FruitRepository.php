@@ -29,6 +29,7 @@ class FruitRepository extends ServiceEntityRepository
      */
     public function all(
         int $page = 1,
+        int $size = 10,
         string $orderBy = 'name',
         string $direction = 'ASC',
         string $search = '',
@@ -38,10 +39,13 @@ class FruitRepository extends ServiceEntityRepository
             ->orWhere('f.family LIKE :search')
             ->orWhere('f.genus LIKE :search')
             ->orWhere('f.fruitOrder LIKE :search')
+            ->orWhere('f.source LIKE :search')
             ->orderBy("f.$orderBy", $direction)
             ->setParameter('search', "%$search%");
 
-        return (new Paginator($qb))->paginate($page);
+        return (new Paginator($qb))
+            ->setPageSize($size)
+            ->paginate($page);
     }
 
     /**

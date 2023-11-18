@@ -14,14 +14,17 @@ final class IndexController extends AbstractController
     public function all(Request $request, FruitRepository $fruits): JsonResponse
     {
         $page = (int) $request->get('page');
+        $size = (int) $request->get('size');
         $orderBy = $request->get('order_by', 'name');
         $search = $request->get('search');
         $direction = $request->get('direction', 'ASC');
 
         /** @var \ArrayIterator $result **/
-        $result = $fruits->all($page, $orderBy, $direction, $search)
-            ->getResults();
+        $result = $fruits->all($page, $size, $orderBy, $direction, $search)->toArray();
 
-        return new JsonResponse($result->getArrayCopy());
+        // @INFO: Remove irrelevant property when responding
+        unset($result['queryBuilder']);
+
+        return new JsonResponse($result);
     }
 }
