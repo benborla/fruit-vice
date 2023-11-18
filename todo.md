@@ -20,8 +20,8 @@ API:
     - fruits:purge
 [x] - Setup service
 [x] - Setup endpoints
-[ ] - Need to create pagination /fruits
-[ ] - Need to accept POST data [POST] /fruit
+[x] - Need to create pagination /fruits
+[x] - Need to accept POST data [POST] /fruit
 [x] - Send a mail once the fruits:fetch is executed
 [x] - Search or filter via Name or Family
 [x] - Send a mail once the fruits:fetch is executed
