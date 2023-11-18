@@ -43,11 +43,17 @@ Usage: `php bin/console fruits:fetch`
 | ------ | ------ |
 | fruits:fetch | Sync database from API source, optional parameter `--truncate={bool}` |
 
+
+
 ## API Endpoints
 
+
 ### Get all `fruits` resources
+
 Method: **GET**
+
 Endpoint: `/`
+
 Parameters:
 - page: for pagination, which page should it return
 - size: how many rows it should return
@@ -57,14 +63,22 @@ Parameters:
 
 Sample Usage: `/?size=5&page=2`
 
+
 ### Get `fruit` resource
+
 Method: **GET**
+
 Endpoint: `/fruit/:id `
+
 Parameters: id
 
+
 ### Create `fruit` resource
+
 Method: **POST** or **PUT**
+
 Endpoint: `/fruit`
+
 Sample Payload:
 ```json
 {
@@ -80,10 +94,15 @@ Sample Payload:
 }
 ```
 
+
 ### Update `fruit` resource
+
 Method: **POST** or **PATCH**
+
 Endpoint: `/fruit/:id `
+
 Parameters: id
+
 Sample Payload:
 ```json
 {
@@ -93,21 +112,36 @@ Sample Payload:
 ```
 *Only provide the properties that needs to be updated.*
 
+
 ### Delete `fruit` resource
+
 Method: **DELETE**
+
 Endpoint: `/fruit/:id `
+
 Parameters: id
 
+
 ### Get all `favorites` resources
+
 Method: **GET**
+
 Endpoint: `/favorites`
 
+
 ### Add `fruit` in `favorite` resource
+
 Method: **POST**
+
 Endpoint: `/favorites/:fruitId`
+
 Parameter: **fruitId**
 
+
 ### Remove `fruit` in `favorite` resource
+
 Method: **DELETE**
+
 Endpoint: `/favorite/:fruitId `
+
 Parameters: fruitId
