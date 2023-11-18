@@ -134,6 +134,19 @@ final class FruitController extends AbstractController
     }
 
     /**
+     * Get all favorites
+     *
+     * @param \App\Repository\FavoriteRepository $favorites
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    #[Route('/favorites', name: 'favorite.all', methods: ['GET'])]
+    public function favorites(FavoriteRepository $favorites)
+    {
+        return $this->json($favorites->all());
+    }
+
+    /**
      * Add fruit to favorites
      *
      * @param \Symfony\Component\HttpFoundation\Request $request

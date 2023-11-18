@@ -2,6 +2,10 @@
   <div class="p-5 mb-4 box rounded-3">
     <div class="container-fluid">
       <h1 class="display-5 fw-bold mb-3">Fruit Details</h1>
+      <div class="alert" :class="{ 'alert-danger': !isSuccessful, 'alert-success': isSuccessful }" role="alert"
+        v-if="message">
+        {{ message }}
+      </div>
       <form method="POST" action="#">
         <div class="form-floating mb-3">
           <input type="text" class="form-control" id="name" name="name" placeholder="Name" v-model="fruit.name">
@@ -9,8 +13,8 @@
         </div>
         <div class="form-floating mb-3">
           <input type="text" class="form-control" id="genus" name="genus" placeholder="Genus" v-model="fruit.genus">
+          <label for="name">Genus</label>
         </div>
-        <label for="genus">jGenus</label>
         <div class="form-floating mb-3">
           <input type="text" class="form-control" id="family" name="family" placeholder="Family" v-model="fruit.family">
           <label for="family">Family</label>
@@ -42,10 +46,15 @@
             v-model="fruit.calories">
           <label for="calories">Calories</label>
         </div>
-        <button type="submit" class="btn btn-success btn-lg float-end">
-          Submit
+        <button type="button" class="btn btn-success btn-lg float-end" @click="createData" v-if="!this.$route.params.id">
+          Create
+        </button>
+
+        <button type="button" class="btn btn-success btn-lg float-end" @click="updateData" v-if="this.$route.params.id">
+          Update
         </button>
       </form>
+      <div class="clearfix"></div>
     </div>
   </div>
 </template>
@@ -55,11 +64,24 @@ import FruitsApi from '@/api/fruits'
 import type Fruit from '@/types/Fruit'
 
 export default defineComponent({
-  name: 'form',
+  name: 'fruit-form',
   data() {
     return {
-      fruit: {} as Fruit,
+      fruit: {
+        id: null,
+        name: '',
+        genus: '',
+        family: '',
+        fruitOrder: '',
+        carbohydrates: 0,
+        protein: 0,
+        fat: 0,
+        sugar: 0,
+        calories: 0
+      } as Fruit,
       message: '' as string,
+      isSuccessful: true,
+      submitted: false,
     }
   },
   methods: {
@@ -71,18 +93,40 @@ export default defineComponent({
         })
     },
 
+    async createData() {
+      await FruitsApi.new(this.fruit)
+        .then((response: any) => {
+          this.message = 'Fruit data has been created'
+          this.isSuccessful = true
+          this.submitted = true
+        })
+        .catch((e: Error) => {
+          console.error(e);
+          this.message = 'Something went wrong, please try again'
+          this.isSuccessful = false
+        })
+    },
+
     async updateData() {
       await FruitsApi.update(this.fruit.id, this.fruit)
-      .then((response: any) => {
-        this.message = 'Fruit data has been updated'
-      })
-      .error((e: Error) => {
-        console.error(e);
-      })
+        .then((response: any) => {
+          this.message = 'Fruit data has been updated'
+          this.isSuccessful = true
+          this.submitted = true
+        })
+        .catch((e: Error) => {
+          console.error(e);
+          this.message = 'Something went wrong, please try again'
+          this.isSuccessful = false
+        })
     }
   },
   mounted() {
-    this.retrieveData(this.$route.params.id)
+    // @INFO: Only retrieve, if the id is provided in the /fruit route
+    if (this.$route.params.id) {
+      this.retrieveData(this.$route.params.id)
+    }
+
     this.message = ''
   },
   onUnmounted() {
