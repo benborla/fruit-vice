@@ -118,6 +118,7 @@ final class FruitController extends AbstractController
             )
         ) {
             $fruit = $this->serializedForm($request, $fruit);
+            $fruit->setUpdatedAt(new \DateTime('now'));
             $this->em->flush();
 
             return $this->json($fruit->toArray());
