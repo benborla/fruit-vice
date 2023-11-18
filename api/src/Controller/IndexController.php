@@ -146,6 +146,15 @@ final class IndexController extends AbstractController
         FruitRepository $fruits,
         FavoriteRepository $favorites,
     ) {
+        // @INFO: Check first if we've reached the maximum number of favorited fruits
+        if ($favorites->count([]) >= Favorite::MAX_FAVORITE) {
+            return $this->json([
+                'errors' => [
+                    'favorites' => ['Maximum favorites reached.']
+                ]
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
         $id = (int) $request->attributes->get('id');
         $fruit = $fruits->find($id);
 
@@ -175,6 +184,37 @@ final class IndexController extends AbstractController
             'date_added' => $favorite->getId(),
         ]);
     }
+
+    /**
+     * Remove fruit to favorites
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param \App\Repository\FruitRepository $fruits
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    #[Route('/favorite/{id}', name: 'favorite.delete', methods: ['DELETE'])]
+    public function removeToFavorites(
+        Request $request,
+        FavoriteRepository $favorites,
+    ) {
+        $id = (int) $request->attributes->get('id');
+        $favorite = $favorites->findOneBy(['fruit' => $id]);
+
+        // @INFO: Return 404 if no fruit found or the method type is not DELETE
+        if (
+            !$favorite instanceof Favorite ||
+            $request->getMethod() !== Request::METHOD_DELETE
+        ) {
+            return $this->json([], Response::HTTP_NOT_FOUND);
+        }
+
+        $this->em->remove($favorite);
+        $this->em->flush();
+
+        return $this->json($favorite->toArray(), Response::HTTP_OK);
+    }
+
 
     /**
      * Hydrate the Fruit instance with request data
