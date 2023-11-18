@@ -55,6 +55,8 @@ Parameters:
 - search: search criteria
 - direction: allowed values are **asc** and **desc**
 
+Sample Usage: `/?size=5&page=2`
+
 ### Get `fruit` resource
 Method: **GET**
 Endpoint: `/fruit/:id `
