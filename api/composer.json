@@ -18,6 +18,7 @@
     "symfony/flex": "^2",
     "symfony/framework-bundle": "6.3.*",
     "symfony/http-client": "6.3.*",
+    "symfony/mailer": "6.3.*",
     "symfony/runtime": "6.3.*",
     "symfony/yaml": "6.3.*"
   },
@@ -89,7 +90,8 @@
   "extra": {
     "symfony": {
       "allow-contrib": false,
-      "require": "6.3.*"
+      "require": "6.3.*",
+      "docker": true
     }
   }
 }

@@ -6,6 +6,8 @@
 parameters:
   app.api_endpoint: '%env(API_ENDPOINT)%'
   app.enable_cache: '%env(APP_CACHE)%'
+  app.admin_email: '%env(APP_ADMIN_EMAIL)%'
+  app.mail.from: '%env(APP_MAIL_FROM)%'
 
 services:
     # default configuration for services in *this* file
@@ -39,3 +41,11 @@ services:
 
     # @INFO: Register FruitDecomulator
     App\Service\FruitDecomulator:
+
+    # @INFO: Register NotifyAdminListener
+    App\EventListener\NotifyAdminListener:
+      arguments:
+        $adminEmail: '%app.admin_email%'
+        $mailFrom: '%app.mail.from%'
+      tags:
+        - { name: kernel.event_listener, event: console.terminate, priority: -100 }
