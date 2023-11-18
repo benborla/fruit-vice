@@ -40,7 +40,7 @@ class FruitAggregator
         // @INFO: Check if the fetched data from API already exist in the database table
         foreach ($fruitsFromApi->getItems() as $item) {
             $isNew = false;
-            // @INFO: Check if data already exist
+            // @INFO: Check if the fetched data from API already exist in the database table
             $fruit = $this->fruitRepository->findByField('name', $item['name']);
 
             // @INFO: Create new instance for new data if `fruit` is not existing
