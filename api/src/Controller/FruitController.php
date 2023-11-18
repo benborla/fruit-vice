@@ -182,7 +182,7 @@ final class FruitController extends AbstractController
 
         return $this->json([
             'fruit' => $favorite->getFruit()->toArray(),
-            'date_added' => $favorite->getId(),
+            'date_added' => $favorite->getDateAdded(),
         ]);
     }
 
