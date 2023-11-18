@@ -22,6 +22,7 @@ API:
 [x] - Setup endpoints
 [ ] - Need to create pagination /fruits
 [ ] - Need to accept POST data [POST] /fruit
+[x] - Send a mail once the fruits:fetch is executed
 
 Database
 
