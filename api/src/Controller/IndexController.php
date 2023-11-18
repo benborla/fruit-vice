@@ -3,21 +3,25 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use App\Repository\FruitRepository;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Service\FruitAggregator;
-use App\Service\FruitDecomulator;
 
 final class IndexController extends AbstractController
 {
-    #[Route('/sync', name: 'fruits_get_all', methods: ['GET'])]
-    public function all(FruitAggregator $fruit)
+    #[Route('/', name: 'fruits_get_all', methods: ['GET'])]
+    public function all(Request $request, FruitRepository $fruits): JsonResponse
     {
-        dd($fruit->sync());
-    }
+        $page = (int) $request->get('page');
+        $orderBy = $request->get('order_by', 'name');
+        $search = $request->get('search');
+        $direction = $request->get('direction', 'ASC');
 
-    #[Route('/clear', name: 'fruits_clear_all', methods: ['GET'])]
-    public function clear(FruitDecomulator $fruit)
-    {
-        dd($fruit->__invoke());
+        /** @var \ArrayIterator $result **/
+        $result = $fruits->all($page, $orderBy, $direction, $search)
+            ->getResults();
+
+        return new JsonResponse($result->getArrayCopy());
     }
 }
