@@ -232,7 +232,6 @@ final class FruitController extends AbstractController
         return $this->json($favorite->toArray(), Response::HTTP_OK);
     }
 
-
     /**
      * Hydrate the Fruit instance with request data
      *
