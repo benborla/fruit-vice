@@ -29,6 +29,7 @@ Follow the following commands:
 Follow the following commands:
 - `cd ./app`
 - `npm install`
+- `cp .env.development .env`
 - `npm run dev`
 - Access the provided URL from `npm run dev` command
 
