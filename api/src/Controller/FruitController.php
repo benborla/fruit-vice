@@ -232,7 +232,7 @@ final class FruitController extends AbstractController
         return $fruit->setName($data['name'] ?? $fruit->getName() ?: '')
             ->setGenus($data['genus'] ?? $fruit->getGenus() ?: '')
             ->setFamily($data['family'] ?? $fruit->getFamily() ?: '')
-            ->setFruitOrder($data['fruit_order'] ?? $fruit->getFruitOrder() ?: '')
+            ->setFruitOrder($data['fruitOrder'] ?? $fruit->getFruitOrder() ?: '')
             ->setCarbohydrates($data['carbohydrates'] ?? $fruit->getCarbohydrates() ?: 0)
             ->setFat($data['fat'] ?? $fruit->getFat() ?: 0)
             ->setProtein($data['protein'] ?? $fruit->getProtein() ?: 0)

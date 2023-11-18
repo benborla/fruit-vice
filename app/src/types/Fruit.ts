@@ -1,15 +1,12 @@
 export default interface Fruit {
-  id: null|number,
+  id: number,
   name: string,
-  genus: string
+  genus: string,
   family: string,
   fruitOrder: string,
   carbohydrates: number,
-  fat: number,
   protein: number,
+  fat: number,
   sugar: number,
   calories: number,
-  source: string,
-  createdAt: Date,
-  updatedAt: Date
 }
