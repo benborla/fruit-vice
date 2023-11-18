@@ -28,11 +28,11 @@ class FruitRepository extends ServiceEntityRepository
      * @return \App\Paginator\Paginator Returns a paginated results of Fruits[]
      */
     public function all(
-        int $page = 1,
-        int $size = 10,
-        string $orderBy = 'name',
-        string $direction = 'ASC',
-        string $search = '',
+        ?int $page = 1,
+        ?int $size = 10,
+        ?string $orderBy = 'name',
+        ?string $direction = 'ASC',
+        ?string $search = '',
     ): Paginator {
         $qb = $this->createQueryBuilder('f')
             ->orWhere('f.name LIKE :search')
@@ -63,14 +63,4 @@ class FruitRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
-
-    // public function findOneByField(string $field, string $value): ?Fruit
-    // {
-    //     return $this->createQueryBuilder('f')
-    //         ->andWhere('f.exampleField = :val')
-    //         ->setParameter('val', $value)
-    //         ->getQuery()
-    //         ->getOneOrNullResult()
-    //     ;
-    // }
 }

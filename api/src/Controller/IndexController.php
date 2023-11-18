@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 final class IndexController extends AbstractController
 {
-    #[Route('/', name: 'fruits_get_all', methods: ['GET'])]
+    #[Route('/', name: 'fruits', methods: ['GET'])]
     public function all(Request $request, FruitRepository $fruits): JsonResponse
     {
         $page = (int) $request->get('page');
@@ -26,5 +26,17 @@ final class IndexController extends AbstractController
         unset($result['queryBuilder']);
 
         return new JsonResponse($result);
+    }
+
+    #[Route('/fruit', name: 'fruit_add', methods: ['POST', 'PUT'])]
+    public function fruitNew(Request $request)
+    {
+        // dd($request);
+    }
+
+    #[Route('/fruit/{id}', name: 'fruit', methods: ['GET', 'POST', 'PUT'])]
+    public function fruit(Request $request)
+    {
+        // dd($request);
     }
 }
