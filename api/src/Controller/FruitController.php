@@ -15,7 +15,7 @@ use App\Entity\Favorite;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
-final class IndexController extends AbstractController
+final class FruitController extends AbstractController
 {
     public function __construct(private EntityManagerInterface $em)
     {
