@@ -158,6 +158,7 @@ final class FruitController extends AbstractController
 
         $id = (int) $request->attributes->get('id');
         $fruit = $fruits->find($id);
+        $status = 'existing';
 
         // @INFO: Throw a 404 if a resource is not found
         // @INFO: Ensure that request method is POST
@@ -178,11 +179,13 @@ final class FruitController extends AbstractController
 
             $this->em->persist($favorite);
             $this->em->flush();
+            $status = 'new';
         }
 
         return $this->json([
             'fruit' => $favorite->getFruit()->toArray(),
             'date_added' => $favorite->getDateAdded(),
+            'status' => $status
         ]);
     }
 
