@@ -27,7 +27,11 @@ class FruitDecomulator
         $connection = $this->em->getConnection();
         $platform = $connection->getDatabasePlatform();
         $table = $this->em->getClassMetadata(Fruit::class)->getTableName();
+        // @INFO: Disable foreign key checking when truncating
+        $connection->executeStatement("SET foreign_key_checks = 0;");
         $connection->executeStatement($platform->getTruncateTableSQL($table, true));
+        // @INFO: Put back the original setting
+        $connection->executeStatement("SET foreign_key_checks = 0;");
 
         // @INFO: Purge cache
         $cache = new FilesystemAdapter();

@@ -89,6 +89,9 @@ class Fruit
     #[ORM\Column(nullable: true)]
     private ?\DateTime $updatedAt = null;
 
+    #[ORM\OneToOne(mappedBy: 'fruit', cascade: ['persist', 'remove'])]
+    private ?Favorite $favorite = null;
+
     public function getId(): ?int
     {
         return $this->id;

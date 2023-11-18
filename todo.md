@@ -23,6 +23,10 @@ API:
 [ ] - Need to create pagination /fruits
 [ ] - Need to accept POST data [POST] /fruit
 [x] - Send a mail once the fruits:fetch is executed
+[x] - Search or filter via Name or Family
+[x] - Send a mail once the fruits:fetch is executed
+[x] - CRUD
+
 
 Database
 
@@ -39,14 +43,11 @@ fruits:
     - calories (float) default 0f
     - source (string) options: FRUITY_VICE_API | FRUITY_VICE_APP
 
-users:
+favorites
+    - id (primary)
+    - fruit_id (One-To-One)
+    - date_added (datetime)
     
-[ ] - Search or filter via Name or Family
-[ ] - Send a mail once the fruits:fetch is executed
-[ ] - CRUD
-
-
-
 ------
 Fruits Test Task
 
