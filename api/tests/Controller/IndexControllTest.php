@@ -22,6 +22,5 @@ class IndexControllerTest extends WebTestCase
         $this->assertArrayHasKey('pageSize', $data);
         $this->assertArrayHasKey('results', $data);
         $this->assertArrayHasKey('numResults', $data);
-
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Pagination\Paginator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,8 +14,8 @@ final class IndexController extends AbstractController
     #[Route('/', name: 'fruits', methods: ['GET'])]
     public function all(Request $request, FruitRepository $fruits): JsonResponse
     {
-        $page = (int) $request->get('page');
-        $size = (int) $request->get('size');
+        $page = (int) $request->get('page', 1);
+        $size = (int) $request->get('size', Paginator::PAGE_SIZE) ?: Paginator::PAGE_SIZE;
         $orderBy = $request->get('order_by', 'name');
         $search = $request->get('search');
         $direction = $request->get('direction', 'ASC');
