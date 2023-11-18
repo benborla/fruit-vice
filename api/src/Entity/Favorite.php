@@ -7,8 +7,13 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: FavoriteRepository::class)]
+#[ORM\Table(name: 'favorites')]
 class Favorite
 {
+    /**
+     * INFO: Set a maximum number of items in the favorites table
+     */
+    public const MAX_FAVORITE = 10;
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -48,5 +53,10 @@ class Favorite
         $this->dateAdded = $dateAdded;
 
         return $this;
+    }
+
+    public function toArray(): array
+    {
+        return get_object_vars($this);
     }
 }

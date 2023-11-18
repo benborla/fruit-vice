@@ -8,8 +8,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\FruitRepository;
+use App\Repository\FavoriteRepository;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Fruit;
+use App\Entity\Favorite;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -21,6 +23,9 @@ final class IndexController extends AbstractController
 
     /**
      * Retrieve all fruits based on request parameter
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param \App\Repository\FruitRepository $fruits
      *
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
@@ -44,6 +49,9 @@ final class IndexController extends AbstractController
 
     /**
      * Creates an instance of Fruit
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param \Symfony\Component\Validator\Validator\ValidatorInterface $validator
      *
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
@@ -75,6 +83,9 @@ final class IndexController extends AbstractController
 
     /**
      * Get or patch a single Fruit instance based on Fruit ID provided
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param \App\Repository\FruitRepository $fruits
      *
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
@@ -119,9 +130,50 @@ final class IndexController extends AbstractController
 
             return $this->json($fruit->toArray());
         }
+    }
 
-        // @INFO: Default 404 return
-        return $this->json([], Response::HTTP_NOT_FOUND);
+    /**
+     * Add fruit to favorites
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param \App\Repository\FruitRepository $fruits
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    #[Route('/favorite/{id}', name: 'favorite.add', methods: ['POST'])]
+    public function addToFavorite(
+        Request $request,
+        FruitRepository $fruits,
+        FavoriteRepository $favorites,
+    ) {
+        $id = (int) $request->attributes->get('id');
+        $fruit = $fruits->find($id);
+
+        // @INFO: Throw a 404 if a resource is not found
+        // @INFO: Ensure that request method is DELETE
+        if (
+            !$fruit instanceof Fruit ||
+            $request->getMethod() !== Request::METHOD_POST
+        ) {
+            return $this->json([], Response::HTTP_NOT_FOUND);
+        }
+
+        $favorite = $favorites->findOneBy(['fruit' => $id]);
+
+
+        if (!$favorite instanceof Favorite) {
+            $favorite = (new Favorite())
+                ->setFruit($fruit)
+                ->setDateAdded(new \DateTime('now'));
+
+            $this->em->persist($favorite);
+            $this->em->flush();
+        }
+
+        return $this->json([
+            'fruit' => $favorite->getFruit()->toArray(),
+            'date_added' => $favorite->getId(),
+        ]);
     }
 
     /**

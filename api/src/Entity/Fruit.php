@@ -258,4 +258,21 @@ class Fruit
     {
         return get_object_vars($this);
     }
+
+    public function getFavorite(): ?Favorite
+    {
+        return $this->favorite;
+    }
+
+    public function setFavorite(Favorite $favorite): static
+    {
+        // set the owning side of the relation if necessary
+        if ($favorite->getFruit() !== $this) {
+            $favorite->setFruit($this);
+        }
+
+        $this->favorite = $favorite;
+
+        return $this;
+    }
 }
