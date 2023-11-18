@@ -46,6 +46,7 @@ class FruitAggregator
             // @INFO: Create new instance for new data if `fruit` is not existing
             if (!$fruit) {
                 $fruit = new Fruit();
+                $fruit->setCreatedAt(new \DateTime('now'));
                 $isNew = true;
             }
 
@@ -58,6 +59,7 @@ class FruitAggregator
                 ->setSugar($item['nutritions']['sugar'] ?? 0.0)
                 ->setCarbohydrates($item['nutritions']['carbohydrates'] ?? 0.0)
                 ->setProtein($item['nutritions']['protein'] ?? 0.0)
+                ->setUpdatedAt(new \DateTime('now'))
                 ->setSource(Fruit::SOURCE_FETCHED_API);
 
             // @INFO: Persist non-existent data
