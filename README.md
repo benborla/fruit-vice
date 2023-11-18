@@ -35,7 +35,9 @@ Follow the following commands:
 
 ## Available commands
 
-Below are the command available for Fruity Vice
+Below is the command available for Fruity Vice
+
+Usage: `php bin/console fruits:fetch`
 
 | Command | Description |
 | ------ | ------ |
