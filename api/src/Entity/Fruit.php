@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\FruitRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: FruitRepository::class)]
 #[ORM\Table(name: 'fruits')]
@@ -25,15 +26,43 @@ class Fruit
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\NotBlank(message: "Name cannot be blank")]
+    #[Assert\Length(
+        min: 4,
+        max: 50,
+        minMessage: "Name must be at least 4 characters long.",
+        maxMessage: "Name cannot be longer than 50 characters."
+    )]
     private ?string $name = null;
 
     #[ORM\Column(length: 20)]
+    #[Assert\NotBlank(message: "Genus cannot be blank")]
+    #[Assert\Length(
+        min: 4,
+        max: 20,
+        minMessage: "Genus must be at least 4 characters long.",
+        maxMessage: "Genus cannot be longer than 20 characters."
+    )]
     private ?string $genus = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\NotBlank(message: "Family cannot be blank")]
+    #[Assert\Length(
+        min: 4,
+        max: 50,
+        minMessage: "Family must be at least 4 characters long.",
+        maxMessage: "Family cannot be longer than 50 characters."
+    )]
     private ?string $family = null;
 
     #[ORM\Column(length: 30)]
+    #[Assert\NotBlank(message: "Fruit order cannot be blank")]
+    #[Assert\Length(
+        min: 4,
+        max: 30,
+        minMessage: "Fruit order must be at least 4 characters long.",
+        maxMessage: "Fruit order cannot be longer than 30 characters."
+    )]
     private ?string $fruitOrder = null;
 
     #[ORM\Column(nullable: true)]
@@ -220,5 +249,10 @@ class Fruit
     public function setTimestampsOnUpdate(): void
     {
         $this->updatedAt = new \DateTime('now');
+    }
+
+    public function toArray(): array
+    {
+        return get_object_vars($this);
     }
 }
