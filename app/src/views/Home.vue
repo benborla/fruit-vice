@@ -100,7 +100,6 @@ import { defineComponent } from "vue";
 import FruitsApi from '@/api/fruits'
 import type Fruit from '@/types/Fruit'
 
-
 export default defineComponent({
   name: 'home',
   data() {

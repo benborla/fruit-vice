@@ -54,7 +54,6 @@ export default defineComponent({
     },
   },
   mounted() {
-    console.log('went here')
     this.getFavorites()
   },
 })
