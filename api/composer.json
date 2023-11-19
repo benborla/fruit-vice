@@ -85,7 +85,7 @@
       "composer run fix",
       "composer run lint ./src ./tests"
     ],
-    "serve": "php -S localhost:8888 -t public"
+    "serve": "export COMPOSER_PROCESS_TIMEOUT=3600 && php -S localhost:8888 -t public"
   },
   "conflict": {
     "symfony/symfony": "*"
