@@ -64,17 +64,11 @@ final class FruitController extends AbstractController
 
         $fruit = $this->serializedForm($request, $fruit);
 
-        $violations = $validator->validate($fruit);
-
-        // @INFO: Return an error upon validator errors
-        if (count($violations) > 0) {
-            $errors = [];
-            foreach ($violations as $violation) {
-                $errors[$violation->getPropertyPath()][] = $violation->getMessage();
-            }
-
+        //@INFO: Return validation errors
+        if ($errors = $this->validate($fruit, $validator)) {
             return $this->json(['errors' => $errors], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
+
         $this->em->persist($fruit);
         $this->em->flush();
 
@@ -90,7 +84,7 @@ final class FruitController extends AbstractController
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     #[Route('/fruit/{id}', name: 'fruit', methods: ['GET', 'POST', 'PATCH', 'DELETE'])]
-    public function fruit(Request $request, FruitRepository $fruits)
+    public function fruit(Request $request, FruitRepository $fruits, ValidatorInterface $validator): JsonResponse
     {
         $id = (int) $request->attributes->get('id');
         $fruit = $fruits->find($id);
@@ -98,16 +92,6 @@ final class FruitController extends AbstractController
         // @INFO: Throw a 404 if a resource is not found
         if (!$fruit instanceof Fruit) {
             return $this->json([], Response::HTTP_NOT_FOUND);
-        }
-
-        // @INFO: Return a resource
-        if ($request->getMethod() === Request::METHOD_GET) {
-            // @INFO: Throw a 404 if a resource is not found
-            if (!$fruit instanceof Fruit) {
-                return $this->json([], Response::HTTP_NOT_FOUND);
-            }
-
-            return $this->json($fruit->toArray());
         }
 
         // @INFO: Update and return a resource
@@ -118,19 +102,23 @@ final class FruitController extends AbstractController
             )
         ) {
             $fruit = $this->serializedForm($request, $fruit);
+
+            //@INFO: Return validation errors
+            if ($errors = $this->validate($fruit, $validator)) {
+                return $this->json(['errors' => $errors], Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+
             $fruit->setUpdatedAt(new \DateTime('now'));
             $this->em->flush();
-
-            return $this->json($fruit->toArray());
         }
 
         // @INFO: Delete a resource
         if ($request->getMethod() === Request::METHOD_DELETE) {
             $this->em->remove($fruit);
             $this->em->flush();
-
-            return $this->json($fruit->toArray());
         }
+
+        return $this->json($fruit->toArray());
     }
 
     /**
@@ -254,5 +242,29 @@ final class FruitController extends AbstractController
             ->setSugar($data['sugar'] ?? $fruit->getSugar() ?: 0)
             ->setCalories($data['calories'] ?? $fruit->getCalories() ?: 0)
             ->setSource(Fruit::SOURCE_FROM_APP);
+    }
+
+    /**
+     * Ensure that the submitted data adheres the field requirement
+     *
+     * @param \App\Entity\Fruit $fruit
+     * @param Symfony\Component\Validator\Validator\ValidatorInterface $validator
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    private function validate(Fruit $fruit, ValidatorInterface $validator)
+    {
+        $violations = $validator->validate($fruit);
+        $errors = [];
+
+        // @INFO: Return an error upon validator errors
+        if (count($violations) > 0) {
+            $errors = [];
+            foreach ($violations as $violation) {
+                $errors[$violation->getPropertyPath()][] = $violation->getMessage();
+            }
+        }
+
+        return $errors;
     }
 }

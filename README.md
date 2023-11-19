@@ -85,7 +85,7 @@ Sample Payload:
     "name": "test_name",
     "genus": "test_genus",
     "family": "test_family",
-    "fruit_order": "test_fruit_order",
+    "fruitOrder": "test_fruit_order",
     "carbohydrates": 0,
     "fat": 0,
     "protein": 0,
