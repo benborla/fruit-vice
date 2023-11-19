@@ -13,7 +13,7 @@
         <tbody>
           <tr v-for="(favorite, index) in favorites" :key="index">
             <td>{{ index + 1 }}</td>
-            <td>{{ favorite.fruit_name }}</td>
+            <td><router-link :to="'/fruit/' + favorite.fruit_id + '/view'">{{ favorite.fruit_name }}</router-link></td>
             <td>{{ getFormattedDate(favorite.dateAdded.date) }}</td>
             <td>
               <a href="#" @click="removeFavorite(favorite.fruit_id)">Remove</a>
@@ -43,7 +43,7 @@ export default defineComponent({
       await FruitsApi.favorites()
         .then((response: any) => {
           this.favorites = response.data
-        console.log(response.data)
+          console.log(response.data)
         })
     },
     async removeFavorite(id: number) {

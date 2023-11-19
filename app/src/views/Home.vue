@@ -1,23 +1,24 @@
 <template>
   <div class="row offset-md-3 col-md-9 mb-5 align-items-end">
     <div class="col">
+      <label class="form-label">Sort By</label>
       <select class="form-select" aria-label="select order" v-model="orderBy" @change="retrieveData">
-        <option value="name" selected>Order by</option>
-        <option value="name">Name</option>
+        <option value="name" selected>Name</option>
         <option value="family">Family</option>
+        <option value="id">ID</option>
       </select>
     </div>
     <div class="col">
+      <label class="form-label">Order</label>
       <select class="form-select" aria-label="select direction" v-model="direction" @change="retrieveData">
-        <option value="asc" selected>Order</option>
-        <option value="asc">Ascending</option>
+        <option value="asc" selected>Ascending</option>
         <option value="desc">Descending</option>
       </select>
     </div>
     <div class="col">
+      <label class="form-label">Rows</label>
       <select class="form-select" aria-label="select rows" v-model="size" @change="retrieveData">
-        <option value="5" selected>Rows</option>
-        <option value="5">5</option>
+        <option value="5" selected>5</option>
         <option value="10">10</option>
         <option value="20">20</option>
       </select>
@@ -48,6 +49,7 @@
             <th scope="col">Genus</th>
             <th scope="col">Family</th>
             <th scope="col">Order</th>
+            <th scope="col">Date Added</th>
             <th scope="col">Actions</th>
           </tr>
         </thead>
@@ -58,6 +60,7 @@
             <td>{{ fruit.genus }}</td>
             <td>{{ fruit.family }}</td>
             <td>{{ fruit.fruitOrder }}</td>
+            <td>{{ getFormattedDate(fruit.createdAt.date) }}</td>
             <td>
               <a href="#" @click="addToFavorite(fruit)">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star-fill"
@@ -68,7 +71,7 @@
               </a> |
               <router-link :to="'/fruit/' + fruit.id + '/view'">View</router-link> |
               <router-link :to="'/fruit/' + fruit.id">Edit</router-link> |
-              <a href="#" @click="deleteFruit(fruit.id)">Delete</a>
+              <button class="btn btn-link" @click="deleteFruit(fruit.id)">Delete</button>
             </td>
           </tr>
         </tbody>
@@ -79,8 +82,8 @@
             <button type="button" class="page-link" @click="previous" tabindex="-1"
               :aria-disabled="this.page <= 1 && 'true'">Previous</button>
           </li>
-          <li class="page-item" v-for="n in this.paginationCount">
-            <button class="page-link" @click="goto(n)">{{ n }}</button>
+          <li class="page-item" v-for="n in this.paginationCount" :class="this.page === n && 'active'">
+            <button class="page-link" @click="goto(n)" :aria-disabled="this.page === n && 'disabled'">{{ n }}</button>
           </li>
           <li class="page-item" :class="this.page >= this.paginationCount && 'disabled'">
             <button class="page-link" @click="next"
@@ -161,7 +164,6 @@ export default defineComponent({
             this.message = `${fruit.name} has already been added as favorite`
             this.isSuccessful = false
           }
-
         })
         .catch((e: Error) => {
           console.log(e);
@@ -169,7 +171,10 @@ export default defineComponent({
           this.message = favorites[0]
           this.isSuccessful = false
         })
-    }
+    },
+    getFormattedDate(date: string) {
+      return new Date(date).toISOString().slice(0, 19).replace("T", " ");
+    },
   },
   mounted() {
     this.retrieveData();
