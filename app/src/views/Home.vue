@@ -56,7 +56,6 @@
         <tbody>
           <tr v-for="(fruit, index) in fruits" :key="index">
             <th scope="row">{{ fruit.id }}</th>
-            <td>{{ fruit.name }}</td>
             <td>
               <router-link
                 class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
@@ -70,10 +69,10 @@
             <td>{{ fruit.fruitOrder }}</td>
             <td>{{ formatDate(fruit.createdAt.date) }}</td>
             <td>
-              <a href="#" @click="addToFavorite(fruit)"><FavoriteIcon /></a> |
+              <a href="#" @click="addToFavorite(fruit)"><FavoriteIcon /></a>&nbsp;
               <router-link
-                class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
-                :to="'/fruit/' + fruit.id">Edit</router-link> |
+                class="btn btn-link link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+                :to="'/fruit/' + fruit.id">Edit</router-link>
               <button type="button"
                 class="btn btn-link text-danger link-offset-2 link-offset-3-hover link-underline-danger link-underline-opacity-0 link-underline-opacity-75-hover"
                 @click="deleteFruit(fruit.id)">Delete</button>
