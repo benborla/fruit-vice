@@ -170,6 +170,7 @@ export default defineComponent({
             this.message = `${fruit.name} has already been added as favorite`
             this.isSuccessful = false
           }
+          this.retrieveData()
         })
         .catch((e: Error) => {
           console.log(e);
