@@ -1,5 +1,7 @@
+type Nullable<T> = T | null;
+
 export default interface Fruit {
-  id: number,
+  id: Nullable<number>,
   name: string,
   genus: string,
   family: string,
@@ -9,4 +11,12 @@ export default interface Fruit {
   fat: number,
   sugar: number,
   calories: number,
+  createdAt: {
+    date: string
+  },
+  updatedAt: {
+    date: string
+  },
+  source: string,
+  favorite: Nullable<object>
 }

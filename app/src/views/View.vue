@@ -42,16 +42,13 @@
             <small>Units of energy derived from food, utilized by the body for various functions, including metabolism,
               movement, and maintaining physiological processes.</small>
           </div>
-          <span class="text-success">{{ fruit.calories }} kcal</span>
-        </li>
-        <li class="list-group-item d-flex justify-content-between">
-          <span>Total Nutrion</span>
-          <strong>{{ getTotalNutrition() }}</strong>
+          <strong>{{ fruit.calories }} kcal</strong>
         </li>
       </ul>
     </div>
     <div class="col-md-7 col-lg-8">
-      <h4 class="mb-3">Fruit Details</h4>
+      <h4 class="mb-3">Fruit Details <span class="text-muted fs-6 fst-italic">{{ translateSource(fruit.source) }}</span>
+      </h4>
       <div class="row g-3">
         <div class="col-sm-6">
           <div for="firstName" class="form-label">Name</div>
@@ -71,7 +68,24 @@
           <div class="form-label">Order</div>
           <h6 class="font-weight-bold">{{ fruit.fruitOrder }}</h6>
         </div>
+        <hr class="my-4">
+        <div class="col-sm-6">
+          <div class="form-label">Created At</div>
+          <h6 class="font-weight-bold">{{ formatDate(fruit.createdAt?.date) }}</h6>
+        </div>
+        <div class="col-sm-6">
+          <div class="form-label">Updated At</div>
+          <h6 class="font-weight-bold">{{ formatDate(fruit.updatedAt?.date) }}</h6>
+        </div>
       </div>
+      <hr class="my-4">
+
+      <div class="float-end">
+      <router-link
+        class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+        :to="'/fruit/' + fruit.id">Update</router-link>
+      </div>
+      <div class="clearfix"></div>
     </div>
   </div>
 </template>
@@ -85,24 +99,16 @@ export default defineComponent({
   data() {
     return {
       fruit: {
-        id: null,
-        name: '',
-        genus: '',
-        family: '',
-        fruitOrder: '',
-        carbohydrates: 0,
-        protein: 0,
-        fat: 0,
-        sugar: 0,
-        calories: 0
+        createdAt: {
+          date: '1970-01-01T00:00:00.000Z'
+        },
+        updatedAt: {
+          date: '1970-01-01T00:00:00.000Z'
+        }
       } as Fruit,
     }
   },
   methods: {
-    getTotalNutrition() {
-      return parseFloat(this.fruit.carbohydrates + this.fruit.protein +
-        this.fruit.sugar + this.fruit.fat).toFixed(2);
-    },
     async retrieveData(id: number) {
       await FruitsApi.get(id)
         .then((response: any) => {
@@ -112,7 +118,7 @@ export default defineComponent({
     },
   },
   mounted() {
-    this.retrieveData(this.$route.params.id)
+    this.retrieveData(parseInt(this.$route.params.id))
   }
 })
 </script>

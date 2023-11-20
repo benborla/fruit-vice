@@ -57,21 +57,26 @@
           <tr v-for="(fruit, index) in fruits" :key="index">
             <th scope="row">{{ fruit.id }}</th>
             <td>{{ fruit.name }}</td>
+            <td>
+              <router-link
+                class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+                :to="'/fruit/' + fruit.id + '/view'">{{ fruit.name }}</router-link>&nbsp;
+              <span class="text-warning" v-if="fruit.favorite">
+                <FavoriteIcon />
+              </span>
+            </td>
             <td>{{ fruit.genus }}</td>
             <td>{{ fruit.family }}</td>
             <td>{{ fruit.fruitOrder }}</td>
-            <td>{{ getFormattedDate(fruit.createdAt.date) }}</td>
+            <td>{{ formatDate(fruit.createdAt.date) }}</td>
             <td>
-              <a href="#" @click="addToFavorite(fruit)">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star-fill"
-                  viewBox="0 0 16 16">
-                  <path
-                    d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
-                </svg>
-              </a> |
-              <router-link :to="'/fruit/' + fruit.id + '/view'">View</router-link> |
-              <router-link :to="'/fruit/' + fruit.id">Edit</router-link> |
-              <button class="btn btn-link" @click="deleteFruit(fruit.id)">Delete</button>
+              <a href="#" @click="addToFavorite(fruit)"><FavoriteIcon /></a> |
+              <router-link
+                class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+                :to="'/fruit/' + fruit.id">Edit</router-link> |
+              <button type="button"
+                class="btn btn-link text-danger link-offset-2 link-offset-3-hover link-underline-danger link-underline-opacity-0 link-underline-opacity-75-hover"
+                @click="deleteFruit(fruit.id)">Delete</button>
             </td>
           </tr>
         </tbody>
@@ -94,8 +99,10 @@
     </div>
   </div>
 </template>
-
-<script lang="ts">
+<script lang="ts" setup>
+import FavoriteIcon from '@/components/FavoriteIcon.vue'
+</script>
+<script lang = "ts" >
 import { defineComponent } from "vue";
 import FruitsApi from '@/api/fruits'
 import type Fruit from '@/types/Fruit'
@@ -170,10 +177,7 @@ export default defineComponent({
           this.message = favorites[0]
           this.isSuccessful = false
         })
-    },
-    getFormattedDate(date: string) {
-      return new Date(date).toISOString().slice(0, 19).replace("T", " ");
-    },
+    }
   },
   mounted() {
     this.retrieveData();

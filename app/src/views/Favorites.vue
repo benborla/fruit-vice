@@ -13,10 +13,10 @@
         <tbody>
           <tr v-for="(favorite, index) in favorites" :key="index">
             <td>{{ index + 1 }}</td>
-            <td><router-link :to="'/fruit/' + favorite.fruit_id + '/view'">{{ favorite.fruit_name }}</router-link></td>
-            <td>{{ getFormattedDate(favorite.dateAdded.date) }}</td>
+            <td><router-link class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" :to="'/fruit/' + favorite.fruit_id + '/view'">{{ favorite.fruit_name }}</router-link></td>
+            <td>{{ formatDate(favorite.dateAdded.date) }}</td>
             <td>
-              <a href="#" @click="removeFavorite(favorite.fruit_id)">Remove</a>
+              <button type="button" class="btn btn-link text-danger link-offset-2 link-offset-3-hover link-underline-danger link-underline-opacity-0 link-underline-opacity-75-hover" @click="removeFavorite(favorite.fruit_id)">Remove</button>
             </td>
           </tr>
         </tbody>
@@ -27,12 +27,13 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import FruitsApi from '@/api/fruits'
+import type Favorite from '@/types/Favorite'
 
 export default defineComponent({
   name: 'favorites',
   data() {
     return {
-      favorites: []
+      favorites: [] as Favorite[]
     }
   },
   methods: {
@@ -43,7 +44,6 @@ export default defineComponent({
       await FruitsApi.favorites()
         .then((response: any) => {
           this.favorites = response.data
-          console.log(response.data)
         })
     },
     async removeFavorite(id: number) {

@@ -4,7 +4,14 @@
       <h1 class="display-5 fw-bold mb-3">Fruit Details</h1>
       <div class="alert" :class="{ 'alert-danger': !isSuccessful, 'alert-success': isSuccessful }" role="alert"
         v-if="message">
-        {{ message }}
+        <span v-if="typeof message === 'string'">
+          {{ message }}
+        </span>
+        <span v-if="typeof message === 'object'">
+          <li v-for="error in message">
+            {{ error }}
+          </li>
+        </span>
       </div>
       <form method="POST" action="#">
         <div class="form-floating mb-3">
@@ -46,13 +53,15 @@
             v-model="fruit.calories">
           <label for="calories">Calories</label>
         </div>
-        <button type="button" class="btn btn-success btn-lg float-end" @click="createData" v-if="!this.$route.params.id">
+        <a href="#" type="button" class="btn btn-success btn-lg float-end" @click="createData"
+          v-if="!this.$route.params.id">
           Create
-        </button>
+        </a>
 
-        <button type="button" class="btn btn-success btn-lg float-end" @click="updateData" v-if="this.$route.params.id">
+        <a href="#" type="button" class="btn btn-success btn-lg float-end" @click="updateData"
+          v-if="this.$route.params.id">
           Update
-        </button>
+        </a>
       </form>
       <div class="clearfix"></div>
     </div>
@@ -62,6 +71,12 @@
 import { defineComponent } from "vue";
 import FruitsApi from '@/api/fruits'
 import type Fruit from '@/types/Fruit'
+
+type ErrorMessagesType = {
+  errors: {
+    [key: string]: string[];
+  };
+};
 
 export default defineComponent({
   name: 'fruit-form',
@@ -79,34 +94,59 @@ export default defineComponent({
         sugar: 0,
         calories: 0
       } as Fruit,
-      message: '' as string,
+      message: '' as string|object,
       isSuccessful: true,
       submitted: false,
     }
   },
   methods: {
+    clearForm() {
+      this.fruit = {
+        id: null,
+        name: '',
+        genus: '',
+        family: '',
+        fruitOrder: '',
+        carbohydrates: 0,
+        protein: 0,
+        fat: 0,
+        sugar: 0,
+        calories: 0
+      }
+    },
+    formatErrorMessage(errorMessages: ErrorMessagesType) {
+      let errors: {} = {};
+
+      for (const field in errorMessages.errors) {
+        const messages = errorMessages.errors[field];
+        const fieldLabel = field.charAt(0).toUpperCase() + field.slice(1);
+
+        messages.forEach((message: string) => {
+          errors[fieldLabel] = message;
+        });
+      }
+
+      this.message = errors;
+    },
     async retrieveData(id: number) {
       await FruitsApi.get(id)
         .then((response: any) => {
-          console.log(response);
           this.fruit = response.data;
         })
     },
-
     async createData() {
       await FruitsApi.new(this.fruit)
         .then((response: any) => {
           this.message = 'Fruit data has been created'
           this.isSuccessful = true
           this.submitted = true
+          this.clearForm()
         })
         .catch((e: Error) => {
-          console.error(e);
-          this.message = 'Something went wrong, please try again'
+          this.formatErrorMessage(e.response.data)
           this.isSuccessful = false
         })
     },
-
     async updateData() {
       await FruitsApi.update(this.fruit.id, this.fruit)
         .then((response: any) => {
@@ -115,8 +155,7 @@ export default defineComponent({
           this.submitted = true
         })
         .catch((e: Error) => {
-          console.error(e);
-          this.message = 'Something went wrong, please try again'
+          this.formatErrorMessage(e.response.data)
           this.isSuccessful = false
         })
     }
@@ -130,7 +169,7 @@ export default defineComponent({
     this.message = ''
   },
   onUnmounted() {
-    this.fruit = {}
+    this.clearForm()
     this.message = ''
   }
 })
