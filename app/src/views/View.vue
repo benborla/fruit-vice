@@ -47,12 +47,14 @@
       </ul>
     </div>
     <div class="col-md-7 col-lg-8">
-      <h4 class="mb-3">Fruit Details <span class="text-muted fs-6 fst-italic">{{ translateSource(fruit.source) }}</span>
+      <h4 class="mb-3">
+        <span class="text-warning" v-if="fruit.favorite !== null"><FavoriteIcon /></span>
+        {{ fruit.name }}
       </h4>
       <div class="row g-3">
         <div class="col-sm-6">
-          <div for="firstName" class="form-label">Name</div>
-          <h6 class="font-weight-bold">{{ fruit.name }}</h6>
+          <div for="firstName" class="form-label">Source</div>
+          <h6 class="font-weight-bold">{{ translateSource(fruit.source) }}</h6>
         </div>
         <div class="col-sm-6">
           <div class="form-label">Family</div>
@@ -80,10 +82,15 @@
       </div>
       <hr class="my-4">
 
+      <div class="float-start">
+        <a href="#"
+          class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+          @click="$router.go(-1)">&laquo; Back</a>
+      </div>
       <div class="float-end">
-      <router-link
-        class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
-        :to="'/fruit/' + fruit.id">Update</router-link>
+        <router-link
+          class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+          :to="'/fruit/' + fruit.id">Update</router-link>
       </div>
       <div class="clearfix"></div>
     </div>
@@ -93,9 +100,13 @@
 import { defineComponent } from "vue";
 import FruitsApi from '@/api/fruits'
 import type Fruit from '@/types/Fruit'
+import FavoriteIcon from '@/components/FavoriteIcon.vue'
 
 export default defineComponent({
   name: 'view-fruit',
+  components: {
+      FavoriteIcon
+  },
   data() {
     return {
       fruit: {
@@ -112,7 +123,6 @@ export default defineComponent({
     async retrieveData(id: number) {
       await FruitsApi.get(id)
         .then((response: any) => {
-          console.log(response);
           this.fruit = response.data;
         })
     },

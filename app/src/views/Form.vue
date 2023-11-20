@@ -53,15 +53,22 @@
             v-model="fruit.calories">
           <label for="calories">Calories</label>
         </div>
-        <a href="#" type="button" class="btn btn-success btn-lg float-end" @click="createData"
-          v-if="!this.$route.params.id">
-          Create
-        </a>
-
-        <a href="#" type="button" class="btn btn-success btn-lg float-end" @click="updateData"
-          v-if="this.$route.params.id">
-          Update
-        </a>
+        <div class="float-start">
+          <a href="#"
+            class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+            @click="$router.go(-1)">&laquo; Back</a>
+        </div>
+        <div class="float-end">
+          <a href="#" type="button" class="btn btn-success btn-lg float-end" @click="createData"
+            v-if="!this.$route.params.id">
+            Create
+          </a>
+          <a href="#" type="button" class="btn btn-success btn-lg float-end" @click="updateData"
+            v-if="this.$route.params.id">
+            Update
+          </a>
+        </div>
+        <div class="clearfix"></div>
       </form>
       <div class="clearfix"></div>
     </div>
@@ -94,7 +101,7 @@ export default defineComponent({
         sugar: 0,
         calories: 0
       } as Fruit,
-      message: '' as string|object,
+      message: '' as string | object,
       isSuccessful: true,
       submitted: false,
     }

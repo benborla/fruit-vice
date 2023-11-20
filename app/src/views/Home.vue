@@ -98,16 +98,17 @@
     </div>
   </div>
 </template>
-<script lang="ts" setup>
-import FavoriteIcon from '@/components/FavoriteIcon.vue'
-</script>
 <script lang = "ts" >
 import { defineComponent } from "vue";
 import FruitsApi from '@/api/fruits'
 import type Fruit from '@/types/Fruit'
+import FavoriteIcon from '@/components/FavoriteIcon.vue'
 
 export default defineComponent({
   name: 'home',
+  components: {
+      FavoriteIcon
+  },
   data() {
     return {
       fruits: [] as Fruit[],
