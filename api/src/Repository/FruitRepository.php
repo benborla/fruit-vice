@@ -35,13 +35,15 @@ class FruitRepository extends ServiceEntityRepository
         ?string $search = '',
     ): Paginator {
         $qb = $this->createQueryBuilder('f')
+            ->select('f', 'fv')
             ->orWhere('f.name LIKE :search')
             ->orWhere('f.family LIKE :search')
             ->orWhere('f.genus LIKE :search')
             ->orWhere('f.fruitOrder LIKE :search')
             ->orWhere('f.source LIKE :search')
             ->orderBy("f.$orderBy", $direction)
-            ->setParameter('search', "%$search%");
+            ->setParameter('search', "%$search%")
+            ->leftJoin('f.favorite', 'fv');
 
         return (new Paginator($qb))
             ->setPageSize($size)

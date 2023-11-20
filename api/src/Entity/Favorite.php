@@ -19,7 +19,7 @@ class Favorite
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\OneToOne(inversedBy: 'favorite', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'favorite', cascade: ['persist'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Fruit $fruit = null;
 
