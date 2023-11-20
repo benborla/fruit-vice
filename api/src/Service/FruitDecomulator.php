@@ -31,7 +31,7 @@ class FruitDecomulator
         $connection->executeStatement("SET foreign_key_checks = 0;");
         $connection->executeStatement($platform->getTruncateTableSQL($table, true));
         // @INFO: Put back the original setting
-        $connection->executeStatement("SET foreign_key_checks = 0;");
+        $connection->executeStatement("SET foreign_key_checks = 1;");
 
         // @INFO: Purge cache
         $cache = new FilesystemAdapter();
